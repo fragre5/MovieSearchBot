@@ -14,6 +14,7 @@ public class Constants {
             (
                     "//*[@id=\"kp-wp-tab-overview\"]/div[4]",
                     "//*[@id=\"kp-wp-tab-overview\"]/div[3]",
+                    "//*[@id=\"rso\"]/div[1]",
                     "//*[@id=\"rso\"]/div[2]",
                     "//*[@id=\"rso\"]/div[3]",
                     "//*[@id=\"rso\"]/div[4]",

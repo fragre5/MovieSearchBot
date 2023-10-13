@@ -34,7 +34,16 @@ public class MovieBot extends TelegramLongPollingBot {
             long chatId = update.getMessage().getChatId();
 
             if (Boolean.TRUE.equals(chatIdToAwaitingTitle.get(chatId))) {
-                sendMessage(chatId, commands.findMovie(messageText));
+                List<String> movies = commands.findMovie(messageText);
+
+                sendMessage(chatId, "Результат вашего запроса : " + movies.get(0));
+
+                sendMessage(chatId, "Так же ищут\n");
+
+                for (int i = 1; i < movies.size(); i++) {
+                    sendMessage(chatId, movies.get(i));
+                }
+
                 chatIdToAwaitingTitle.remove(chatId);
                 return;
             }

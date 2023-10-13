@@ -9,12 +9,15 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 public class Finder {
 
-    public static Optional<String> getMovieURL(String filmName) {
+    public static List<String> getMovieURL(String filmName) {
+
+        List<String> searchResults = new ArrayList<>();
 
         System.setProperty(Constants.driverName, Constants.driverPath);
 
@@ -26,7 +29,7 @@ public class Finder {
 
         driver.get(Constants.baseUrl);
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofMillis(400));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofMillis(600));
 
         WebElement findFilm = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id=\"APjFqb\"]")));
 
@@ -46,7 +49,7 @@ public class Finder {
                         break;
                     }
                 } catch (TimeoutException e) {
-                    log.error("Элемент с локатором {" + href + "} не был найден в течении 10 секунд!");
+                    log.error("Элемент с локатором {" + href + "} не был найден в течении 0.4 секунд!");
                 }
 
             }
@@ -57,11 +60,24 @@ public class Finder {
 
         String currentUrlOfMovie = aTag.getAttribute("href");
 
+        currentUrlOfMovie = currentUrlOfMovie.replace(org.example.bot.commands.Constants.origin_ru_tld, org.example.bot.commands.Constants.pathfinder_common_tld);
+
+        searchResults.add(currentUrlOfMovie);
+
         log.info(currentUrlOfMovie);
+
+        List<WebElement> additionalLinks = driver.findElements(By.xpath("//a[@jsname='ZWuC2']"));
+
+        for (WebElement additionalLink : additionalLinks) {
+
+            String nameOfAdditionalMovies = additionalLink.getAttribute("aria-label");
+
+            searchResults.add(nameOfAdditionalMovies);
+        }
 
         driver.quit();
 
-        return currentUrlOfMovie.describeConstable();
+        return searchResults;
     }
 
 }
